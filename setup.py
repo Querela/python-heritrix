@@ -5,7 +5,7 @@ setup(
     packages = ['heritrix'],
     version = '0.1',
     description = 'Simple wrapper around Heritrix v3 API',
-    install_requires = ['requests'],
+    install_requires = ['requests', 'lxml'],
     license = open('LICENSE.txt').read(),
     author = 'Daniel Chudnov',
     author_email = 'dchud@gwu.edu',
