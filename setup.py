@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name="python-heritrix",
-    packages=["heritrix"],
+    py_modules=["heritrix"],
     version="0.2",
     description="Simple wrapper around Heritrix v3 API",
     install_requires=["requests", "lxml"],

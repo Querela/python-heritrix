@@ -287,8 +287,10 @@ class HeritrixAPI(object):
         url = "{host}/job/{job}/jobdir/latest/seeds.txt".format(
             host=self.host, job=job_name
         )
-        resp = self._get(url)
-        seeds = [seed.strip() for seed in resp.iter_lines()]
+        resp = self._get(url, api_headers=False)
+        seeds = resp.text.split("\n")
+        seeds = [seed.strip() for seed in seeds]  # hm?
+        seeds = [seed for seed in seeds if seed]  # filter empty lines
         for i, seed in enumerate(seeds):
             if seed.startswith("#"):
                 # stop at first comment?
