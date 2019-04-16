@@ -275,26 +275,28 @@ class HeritrixAPI(object):
     # ---------------------------------------------------------------------------
     # old    
 
-    def status(self, job=""):
-        xml = ET.fromstring( self._job_action(action="",job=job).text )
-        status = xml.find("crawlControllerState")
-        if status == None:
+    def status( self, job_name ):
+        url = "{host}/job/{job}".format( host=self.host, job=job_name )
+        xml = ET.fromstring( self._post( url ).text )
+        status = xml.find( "crawlControllerState" )
+        if status is None:
             return ""
         else:
             return status.text
 
-    def seeds( self, job ):
-        url = "%s/job/%s/jobdir/latest/seeds.txt" % ( self.host, job )
-        r = requests.get( url, auth=HTTPDigestAuth( self.user, self.passwd ), verify=self.verify )
-        seeds = [ seed.strip() for seed in r.iter_lines() ]
+    def seeds( self, job_name ):
+        url = "{host}/job/{job}/jobdir/latest/seeds.txt".format( host=self.host, job=job_name )
+        resp = self._get( url )
+        seeds = [ seed.strip() for seed in resp.iter_lines() ]
         for i, seed in enumerate( seeds ):
             if seed.startswith( "#" ):
+                # stop at first comment?
                 return seeds[ 0:i ]
         return seeds
 
-    def empty_frontier( self, job ):
+    def empty_frontier( self, job_name ):
         script = "count = job.crawlController.frontier.deleteURIs( \".*\", \"^.*\" )\nrawOut.println count"
-        xml = self.execute_script( job, script, engine="groovy" )
+        xml = self.execute_script( job_name, script, engine="groovy" )
         tree = etree.fromstring( xml.content )
         return tree.find( "rawOutput" ).text.strip()
 
