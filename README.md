@@ -1,3 +1,7 @@
+**NOTE**: _a rather comfortable library seems to exist with [hapy](https://github.com/WilliamMayor/hapy)!_
+
+---
+
 python-heritrix
 ---------------
 
